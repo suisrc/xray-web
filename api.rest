@@ -1,0 +1,166 @@
+@BASE=http://127.0.0.1:8199
+
+### 增加入站
+POST {{BASE}}?action=xray.app.proxyman.conf.AddInbound
+Content-Type: application/json
+
+{
+    "tag": "in-test",
+    "listen": "127.0.0.1",
+    "port": 10809,
+    "protocol": "socks",
+    "sniffing": {
+        "enabled": true,
+        "destOverride": [
+            "http",
+            "tls"
+        ]
+    },
+    "settings": {
+        "auth": "noauth",
+        "udp": true,
+        "allowTransparent": false
+    }
+}
+
+### 删除入站
+POST {{BASE}}?action=xray.app.proxyman.conf.DelInbound&tag=in-test
+Content-Type: application/json
+
+### 列出入站
+POST {{BASE}}?action=xray.app.proxyman.conf.LstInbound
+Content-Type: application/json
+
+###########################################################################
+
+### 增加出站
+POST {{BASE}}?action=xray.app.proxyman.conf.AddOutbound
+Content-Type: application/json
+
+{
+    "tag": "in-test",
+    "protocol": "trojan",
+    "settings": {
+        "servers": [
+            {
+                "address": "api-pp-??.arpc.zsnas.com",
+                "ota": false,
+                "port": 25104,
+                "level": 1,
+                "method": "",
+                "password": "xxx"
+            }
+        ]
+    },
+    "mux": {
+        "enabled": true,
+        "concurrency": -1
+    },
+    "streamSettings": {
+        "network": "xhttp",
+        "tlsSettings": {
+            "fingerprint": "chrome",
+            "allowInsecure": true,
+            "serverName": "apis.arpc.zsnas.com"
+        },
+        "xhttpSettings": {
+            "host": "apis.arpc.zsnas.com",
+            "path": "/v1",
+            "mode": "auto"
+        },
+        "security": "tls"
+    }
+}
+
+### 删除出站
+POST {{BASE}}?action=xray.app.proxyman.conf.DelOutbound&tag=in-test
+Content-Type: application/json
+
+### 列出出站
+POST {{BASE}}?action=xray.app.proxyman.conf.LstOutbound
+Content-Type: application/json
+
+###########################################################################
+
+### 增加路由
+POST {{BASE}}?action=xray.app.proxyman.conf.AddRoute
+Content-Type: application/json
+
+{
+    "ruleTag": "in-test",
+    "outboundTag": "in-test",
+    "inboundTag": ["in-test"]
+}
+
+### 删除路由
+POST {{BASE}}?action=xray.app.proxyman.conf.DelRoute&tag=in-test
+Content-Type: application/json
+
+### 列出路由
+POST {{BASE}}?action=xray.app.proxyman.conf.LstRoute
+Content-Type: application/json
+
+###########################################################################
+
+### 增加路由
+POST {{BASE}}?action=xray.app.proxyman.conf.AddIObound
+Content-Type: application/json
+
+{
+    "inbound": {
+        "tag": "in-test",
+        "listen": "127.0.0.1",
+        "port": 10809,
+        "protocol": "socks",
+        "sniffing": {
+            "enabled": true,
+            "destOverride": [
+                "http",
+                "tls"
+            ]
+        },
+        "settings": {
+            "auth": "noauth",
+            "udp": true,
+            "allowTransparent": false
+        }
+    },
+    "outbound": {
+        "tag": "in-test",
+        "protocol": "trojan",
+        "settings": {
+            "servers": [
+                {
+                    "address": "api-pp-juhk02.arpc.zsnas.com",
+                    "ota": false,
+                    "port": 25104,
+                    "level": 1,
+                    "method": "",
+                    "password": "dfe57a9c-c2b7-4d37-bf99-8768b7dbbb44"
+                }
+            ]
+        },
+        "mux": {
+            "enabled": true,
+            "concurrency": -1
+        },
+        "streamSettings": {
+            "network": "xhttp",
+            "tlsSettings": {
+                "fingerprint": "chrome",
+                "allowInsecure": true,
+                "serverName": "apis.arpc.zsnas.com"
+            },
+            "xhttpSettings": {
+                "host": "apis.arpc.zsnas.com",
+                "path": "/v1",
+                "mode": "auto"
+            },
+            "security": "tls"
+        }
+    }
+}
+
+### 删除路由
+POST {{BASE}}?action=xray.app.proxyman.conf.DelIObound&tag=in-test
+Content-Type: application/json
