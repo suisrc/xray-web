@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/xtls/xray-core/core"
 )
@@ -16,6 +17,7 @@ var version string
  * 启动HTTP服务
  */
 func Serve() {
+	version = strings.TrimSpace(version)
 	var (
 		addr   string
 		port   int
