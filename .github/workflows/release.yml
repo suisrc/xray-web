@@ -14,7 +14,11 @@ jobs:
         with:
           go-version: '1.25'
 
-      - run: go mod tidy
+      - name: install
+        run: |
+          git clone https://github.com/suisrc/Xray-core.git -b fix-main Xray-core
+          sed -i 's|../Xray-core|./Xray-core|g'
+          go mod tidy
 
       - name: build-linux
         run: |
