@@ -2,14 +2,14 @@
 
 NOW = $(shell date -u '+%Y%m%d%I%M%S')
 
-APP = xray-web
+APP = xray
 SERVER_BIN = ./dist/$(APP)
 
 dev: start
 
 # 初始化mod
 init:
-	go mod init ${APP}
+	go mod init ${APP}-web
 
 tidy:
 	go mod tidy
@@ -17,7 +17,7 @@ tidy:
 build:
 	CGO_ENABLED=0 go build -ldflags "-w -s" -o $(SERVER_BIN) ./
 build-win:
-	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -o $(SERVER_BIN)-win.exe ./
+	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -o $(SERVER_BIN).exe ./
 
 # 运行 -gcflags=-G=3
 start:
