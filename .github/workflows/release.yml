@@ -17,7 +17,7 @@ jobs:
       - name: install
         run: |
           git clone https://github.com/suisrc/Xray-core.git -b fix-main Xray-core
-          sed -i 's|../Xray-core|./Xray-core|g'
+          sed -i 's|../Xray-core|./Xray-core|g' go.mod
           go mod tidy
 
       - name: build-linux
