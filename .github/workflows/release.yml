@@ -33,8 +33,8 @@ jobs:
       - name: compress
         run: |
           tar -czf xray-web-linux-64.tar.gz    xray
-          zip -r   xray-web-linux-64.zip       xray.exe
-          tar -czf xray-web-windows-64.tar.gz  xray
+          zip -r   xray-web-linux-64.zip       xray
+          tar -czf xray-web-windows-64.tar.gz  xray.exe
           zip -r   xray-web-windows-64.zip     xray.exe
 
       - name: release
