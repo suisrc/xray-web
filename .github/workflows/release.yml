@@ -41,7 +41,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
-          name: "Version ${{ github.ref_name }} 🚀"
+          name: "${{ github.ref_name }} 🚀"
           draft: false
           prerelease: false
           generate_release_notes: true
