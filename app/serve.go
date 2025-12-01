@@ -13,11 +13,14 @@ import (
 //go:embed version
 var version string
 
+func Version() string {
+	return strings.TrimSpace(version)
+}
+
 /**
  * 启动HTTP服务
  */
 func Serve() {
-	version = strings.TrimSpace(version)
 	var (
 		addr   string
 		port   int
@@ -39,7 +42,7 @@ func Serve() {
 
 	// ------------------------------------------------------------------------
 	if ver {
-		fmt.Printf("Xray v%s (https://github.com/XTLS/Xray-core)\nXweb %s (https://github.com/suisrc/xray-web)\n", core.Version(), version)
+		fmt.Printf("Xray v%s (https://github.com/XTLS/Xray-core)\nXweb %s (https://github.com/suisrc/xray-web)\n", core.Version(), Version())
 		return
 	}
 	// ------------------------------------------------------------------------

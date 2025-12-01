@@ -3,6 +3,7 @@ package app
 import (
 	"bytes"
 	"context"
+	_ "embed"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -22,6 +23,9 @@ import (
 	conf_serial "github.com/xtls/xray-core/infra/conf/serial"
 	_ "github.com/xtls/xray-core/main/distro/all"
 )
+
+//go:embed xray.json
+var xray_conf string
 
 type XrayServe struct {
 	Print bool   // 是否打印配置文件
@@ -146,17 +150,22 @@ func (this *XrayServe) StartXray() string {
 		cfile = cfile[:strings.LastIndexByte(cfile, '.')]
 		fmt.Printf("配置文件不存在: %s, 尝试使用默认配置: %s\n", this.Xrayc, cfile)
 	}
-	if !this.FileExists(cfile) {
-		fmt.Println("默认配置文件不存在, 使用内置配置")
-		this.Xconf = &conf.Config{
-			InboundConfigs: []conf.InboundDetourConfig{},
-		}
-	} else {
-		bts, err := os.ReadFile(cfile)
-		if err != nil {
-			msg := fmt.Sprintf("读取配置文件失败: %s", err.Error())
-			fmt.Println(msg)
-			return msg
+	{
+		var bts []byte
+		if !this.FileExists(cfile) {
+			fmt.Println("默认配置文件不存在, 使用内置配置, 生成中...")
+			// this.Xconf = &conf.Config{
+			// 	InboundConfigs: []conf.InboundDetourConfig{},
+			// }
+			bts = []byte(xray_conf)
+			os.WriteFile(cfile, bts, 0644)
+		} else {
+			bts, err = os.ReadFile(cfile)
+			if err != nil {
+				msg := fmt.Sprintf("读取配置文件失败: %s", err.Error())
+				fmt.Println(msg)
+				return msg
+			}
 		}
 		// xcc, err := core.LoadConfig("json", bytes.NewReader(bts))
 		// xcc, err := conf_serial.LoadJSONConfig(bytes.NewReader(bts))
