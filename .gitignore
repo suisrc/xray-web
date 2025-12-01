@@ -3,3 +3,5 @@
 __*
 dist
 *.log
+
+xray.json
