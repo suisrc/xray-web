@@ -1,4 +1,4 @@
-module xray-web
+module xrayw
 
 go 1.25
 

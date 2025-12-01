@@ -18,24 +18,25 @@ jobs:
 
       - name: install-deps
         run: |
+          echo "${{ github.ref_name }}" > app/version
           git clone https://github.com/suisrc/Xray-core.git -b fix-main Xray-core
           sed -i 's|../Xray-core|./Xray-core|g' go.mod
           go mod tidy
 
       - name: build-linux
         run: |
-          CGO_ENABLED=0 GOARCH=amd64 go build -ldflags "-w -s" -o xray ./
+          CGO_ENABLED=0 GOARCH=amd64 go build -ldflags "-w -s" -o xrayw ./
 
       - name: build-windows
         run: |
-          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -o xray.exe ./
+          CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -ldflags "-w -s" -o xrayw.exe ./
 
       - name: compress
         run: |
-          tar -czf xray-web-linux-64.tar.gz    xray
-          zip -r   xray-web-linux-64.zip       xray
-          tar -czf xray-web-windows-64.tar.gz  xray.exe
-          zip -r   xray-web-windows-64.zip     xray.exe
+          tar -czf xray-web-linux-64.tar.gz    xrayw
+          zip -r   xray-web-linux-64.zip       xrayw
+          tar -czf xray-web-windows-64.tar.gz  xrayw.exe
+          zip -r   xray-web-windows-64.zip     xrayw.exe
 
       - name: release
         uses: softprops/action-gh-release@v1

@@ -1,6 +1,6 @@
 package main
 
-import "xray-web/app"
+import "xrayw/app"
 
 /**
  * 程序入口

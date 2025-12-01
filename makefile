@@ -2,14 +2,14 @@
 
 NOW = $(shell date -u '+%Y%m%d%I%M%S')
 
-APP = xray
+APP = xrayw
 SERVER_BIN = ./dist/$(APP)
 
 dev: start
 
 # 初始化mod
 init:
-	go mod init ${APP}-web
+	go mod init ${APP}
 
 tidy:
 	go mod tidy
