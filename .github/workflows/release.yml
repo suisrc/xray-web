@@ -14,7 +14,7 @@ jobs:
         with:
           go-version: '1.25'
 
-      - name: install
+      - name: install-deps
         run: |
           git clone https://github.com/suisrc/Xray-core.git -b fix-main Xray-core
           sed -i 's|../Xray-core|./Xray-core|g' go.mod
@@ -30,22 +30,22 @@ jobs:
 
       - name: compress
         run: |
-          tar -czf Xray-linux-64.tar.gz    ./dist/xray
-          zip -r   Xray-linux-64.zip       ./dist/xray.exe
-          tar -czf Xray-windows-64.tar.gz  ./dist/xray
-          zip -r   Xray-windows-64.zip     ./dist/xray.exe
+          tar -czf xray-web-linux-64.tar.gz    ./dist/xray
+          zip -r   xray-web-linux-64.zip       ./dist/xray.exe
+          tar -czf xray-web-windows-64.tar.gz  ./dist/xray
+          zip -r   xray-web-windows-64.zip     ./dist/xray.exe
 
       - name: release
         uses: softprops/action-gh-release@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: "${{ secrets.GITHUB_TOKEN }}"
           name: "Version ${{ github.ref_name }} 🚀"
           draft: false
           prerelease: false
           generate_release_notes: true
           body_path: changelog.md
           files: |
-            Xray-linux-64.tar.gz
-            Xray-linux-64.zip
-            Xray-windows-64.tar.gz
-            Xray-windows-64.zip
+            xray-web-linux-64.tar.gz
+            xray-web-linux-64.zip
+            xray-web-windows-64.tar.gz
+            xray-web-windows-64.zip
