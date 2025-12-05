@@ -144,43 +144,10 @@ func (this *XrayServe) StartXray() string {
 		return ""
 	}
 	// 判断 this.XrayC 文件是否存在，如果不存在，更换配置
-	var err error
-	cfile := this.Xrayc
-	if this.Reset || !this.FileExists(cfile) {
-		cfile = cfile[:strings.LastIndexByte(cfile, '.')]
-		fmt.Printf("配置文件不存在: %s, 尝试使用默认配置: %s\n", this.Xrayc, cfile)
-	}
-	{
-		var bts []byte
-		if !this.FileExists(cfile) {
-			fmt.Println("默认配置文件不存在, 使用内置配置, 生成中...")
-			// this.Xconf = &conf.Config{
-			// 	InboundConfigs: []conf.InboundDetourConfig{},
-			// }
-			bts = []byte(xray_conf)
-			os.WriteFile(cfile, bts, 0644)
-		} else {
-			bts, err = os.ReadFile(cfile)
-			if err != nil {
-				msg := fmt.Sprintf("读取配置文件失败: %s", err.Error())
-				fmt.Println(msg)
-				return msg
-			}
-		}
-		// xcc, err := core.LoadConfig("json", bytes.NewReader(bts))
-		// xcc, err := conf_serial.LoadJSONConfig(bytes.NewReader(bts))
-		xcc, err := conf_serial.DecodeJSONConfig(bytes.NewReader(bts))
-		if err != nil {
-			msg := fmt.Sprintf("解析配置文件失败: %s", err.Error())
-			fmt.Println(msg)
-			return msg
-		}
-		if this.Print {
-			fmt.Printf("==========================================\n")
-			fmt.Printf("配置文件: %s, 配置内容: %s\n", cfile, string(bts))
-			fmt.Printf("==========================================\n")
-		}
-		this.Xconf = xcc
+	cfile, err := this.ParseConf()
+	if err != nil {
+		fmt.Println(err.Error())
+		return err.Error()
 	}
 	xcf, err := this.Xconf.Build()
 	// bts, _ := json.MarshalIndent(xcf, "", "  ")
@@ -205,6 +172,60 @@ func (this *XrayServe) StartXray() string {
 	this.Exist = nil
 	fmt.Printf("Xray启动成功, 配置文件: %s, 启动时间: %s\n", cfile, this.Start.Format("2006-01-02 15:04:05"))
 	return ""
+}
+
+/**
+ * 解析配置文件
+ */
+func (this *XrayServe) ParseConf() (string, error) {
+	var err error = nil
+
+	cfile := this.Xrayc
+	if cfile == "none.0" {
+		xcc, err := conf_serial.DecodeJSONConfig(bytes.NewReader([]byte(xray_conf)))
+		if err != nil {
+			return cfile, errors.New(fmt.Sprintf("解析配置内置配置失败: %s", err.Error()))
+		}
+		if this.Print {
+			fmt.Printf("==========================================\n")
+			fmt.Printf("配置文件: [内置], 配置内容: %s\n", xray_conf)
+			fmt.Printf("==========================================\n")
+		}
+		// this.Xconf = &conf.Config{
+		// 	InboundConfigs: []conf.InboundDetourConfig{},
+		// }
+		this.Xconf = xcc
+	} else {
+		if this.Reset || !this.FileExists(cfile) {
+			cfile = cfile[:strings.LastIndexByte(cfile, '.')]
+			fmt.Printf("配置文件不存在: %s, 尝试使用默认配置: %s\n", this.Xrayc, cfile)
+		}
+		var bts []byte
+		if !this.FileExists(cfile) {
+			fmt.Println("默认配置文件不存在, 使用内置配置, 生成中...")
+			bts = []byte(xray_conf)
+			os.WriteFile(cfile, bts, 0644)
+		} else {
+			bts, err = os.ReadFile(cfile)
+			if err != nil {
+				return cfile, errors.New(fmt.Sprintf("读取配置文件失败: %s", err.Error()))
+			}
+		}
+		// xcc, err := core.LoadConfig("json", bytes.NewReader(bts))
+		// xcc, err := conf_serial.LoadJSONConfig(bytes.NewReader(bts))
+		xcc, err := conf_serial.DecodeJSONConfig(bytes.NewReader(bts))
+		if err != nil {
+			return cfile, errors.New(fmt.Sprintf("解析配置文件失败: %s", err.Error()))
+		}
+		if this.Print {
+			fmt.Printf("==========================================\n")
+			fmt.Printf("配置文件: %s, 配置内容: %s\n", cfile, string(bts))
+			fmt.Printf("==========================================\n")
+		}
+		this.Xconf = xcc
+	}
+
+	return cfile, err
 }
 
 // ----------------------------------------------------------------------------

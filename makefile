@@ -23,3 +23,6 @@ build-win:
 start:
 	go run main.go --port 8199
 
+snone:
+	go run main.go --port 8199 -c none -print
+
