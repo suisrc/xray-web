@@ -21,8 +21,8 @@ build-win:
 
 # 运行 -gcflags=-G=3
 start:
-	go run main.go --port 8199
+	go run main.go -port 8199
 
 snone:
-	go run main.go --port 8199 -c none -print
+	go run main.go -port 8199 -c none -print
 

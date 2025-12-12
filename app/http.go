@@ -166,6 +166,10 @@ type IOboundConfConfig struct {
  * 参数同 stats API
  * xray.app.proxyman.conf.GetSysStats
  * xray.app.proxyman.core.GetSysStats
+ * xray.app.proxyman.conf.GetStats
+ * xray.app.proxyman.core.GetStats
+ * xray.app.proxyman.conf.LstStats
+ * xray.app.proxyman.core.LstStats
  *
  */
 func (this *Worker) xrayz(ac string, ww http.ResponseWriter, rr *http.Request) {
